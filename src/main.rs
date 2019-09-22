@@ -9,6 +9,7 @@ fn index2() -> impl Responder {
     HttpResponse::Ok().body("Hello world again!")
 }
 
+// systemfd --no-pid -s http::3000 -- cargo watch -x run
 fn main() {
     let mut listenfd = ListenFd::from_env();
     let mut server = HttpServer::new(|| App::new().route("/", web::get().to(index)));
