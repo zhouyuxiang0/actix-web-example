@@ -28,7 +28,7 @@ fn index() -> impl Responder {
 
 // systemfd --no-pid -s http::3000 -- cargo watch -x run
 fn main() {
-    let sys = System::new("actix_web_example");
+    // let sys = System::new("actix_web_example");
     let mut listenfd = ListenFd::from_env();
     let mut server = HttpServer::new(|| App::new().route("/", web::get().to(index)));
     server = if let Some(l) = listenfd.take_tcp_listener(0).unwrap() {
