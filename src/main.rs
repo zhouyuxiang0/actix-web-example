@@ -1,9 +1,9 @@
 use actix::prelude::*;
-use actix_web::{web, App, HttpResponse, HttpServer, Responder};
 use actix_rt::System;
-use listenfd::ListenFd;
+use actix_web::{web, App, HttpResponse, HttpServer, Responder};
 use diesel::mysql::MysqlConnection;
 use diesel::r2d2::{ConnectionManager, Pool};
+use listenfd::ListenFd;
 
 pub struct Dba(pub Pool<ConnectionManager<MysqlConnection>>);
 
@@ -18,7 +18,10 @@ pub fn init_dba() -> DbAddr {
     let manager = ConnectionManager::<MysqlConnection>::new(db_url);
     let cpu_num = num_cpus::get();
     let pool_num = std::cmp::max(10, cpu_num * 2 + 1) as u32;
-    let conn = Pool::builder().max_size(pool_num).build(manager).expect("创建线程池失败");
+    let conn = Pool::builder()
+        .max_size(pool_num)
+        .build(manager)
+        .expect("创建线程池失败");
     SyncArbiter::start(cpu_num * 2 + 1, move || Dba(conn.clone()))
 }
 
