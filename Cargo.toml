@@ -5,5 +5,10 @@ authors = ["1521350289@qq.com <1521350289@qq.com>"]
 edition = "2018"
 
 [dependencies]
+actix = "0.8.3"
+actix-rt = "1.0.0"
 actix-web = "1.0"
 listenfd = "0.3"
+diesel = { version = "1.4.3", features = ["mysql", "r2d2"] }
+dotenv = "0.9.0"
+num_cpus = "1.11.1"

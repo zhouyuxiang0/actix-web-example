@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  postgres:
+    restart: always
+    image: postgres:latest
+    privileged: true
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: mydb
+    volumes:
+      - $PWD/db/pg_data/data:/var/lib/postgresql/data
+    container_name: postgres
+    ports:
+      - "5432:5432"
+  volumes:
+    $PWD/db/pg_data/data:
+      external: true
