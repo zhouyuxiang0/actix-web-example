@@ -10,5 +10,8 @@ actix-rt = "1.0.0"
 actix-web = "1.0"
 listenfd = "0.3"
 diesel = { version = "1.4.3", features = ["mysql", "r2d2"] }
-dotenv = "0.9.0"
+dotenv = "0.15.0"
+serde="1.0.9"
 num_cpus = "1.11.1"
+chrono = { version = "0.4.6", features = ["serde"] }
+serde_derive="1.0.97"
