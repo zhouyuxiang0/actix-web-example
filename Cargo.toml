@@ -15,3 +15,5 @@ serde="1.0.9"
 num_cpus = "1.11.1"
 chrono = { version = "0.4.6", features = ["serde"] }
 serde_derive="1.0.97"
+env_logger = "0.7.1"
+actix-files = "0.1"
