@@ -53,7 +53,7 @@ fn render_500<B>(mut res: dev::ServiceResponse<B>) -> Result<ErrorHandlerRespons
     Ok(ErrorHandlerResponse::Response(res))
 }
 
-fn index(req: HttpRequest) -> Result<fs::NamedFile, Error> {
+fn static_handler(req: HttpRequest) -> Result<fs::NamedFile, Error> {
     let filename: &str = req.match_info().query("filename");
     let ext: &str = req.match_info().query("ext");
     let file = fs::NamedFile::open(String::from("src/static/") + filename + "." + ext)?;
@@ -85,7 +85,7 @@ fn main() {
             .wrap(Logger::new("%a %{User-Agent}i"))
             .wrap(middleware::DefaultHeaders::new().header("X-Version", "0.2"))
             .data(addr.clone())
-            .route("/static/{filename}.{ext}", web::get().to(index))
+            .route("/static/{filename}.{ext}", web::get().to(static_handler))
             .service(
                 scope("/api").route("/", web::get().to(index1)), // .service(resource("/signup").route(post().to_async(api::auth::signup))),
             )
