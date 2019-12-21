@@ -54,9 +54,16 @@ fn render_500<B>(mut res: dev::ServiceResponse<B>) -> Result<ErrorHandlerRespons
 }
 
 fn index(req: HttpRequest) -> Result<fs::NamedFile, Error> {
-    let path: std::path::PathBuf = req.match_info().query("filename").parse().unwrap();
-    let file = fs::NamedFile::open(String::from("src/") + path.to_str().unwrap())?;
-    Ok(file.use_last_modified(true))
+    let filename: &str = req.match_info().query("filename");
+    let ext: &str = req.match_info().query("ext");
+    let file = fs::NamedFile::open(String::from("src/static/") + filename + "." + ext)?;
+    Ok(file
+        .use_last_modified(true)
+        .use_etag(true)
+        .set_content_disposition(ContentDisposition {
+            disposition: DispositionType::Inline,
+            parameters: vec![],
+        }))
 }
 
 fn index1() -> impl Responder {
@@ -78,11 +85,10 @@ fn main() {
             .wrap(Logger::new("%a %{User-Agent}i"))
             .wrap(middleware::DefaultHeaders::new().header("X-Version", "0.2"))
             .data(addr.clone())
-            .route("/{filename:.*}", web::get().to(index))
+            .route("/static/{filename}.{ext}", web::get().to(index))
             .service(
-                scope("/api"), // .service(resource("/signup").route(post().to_async(api::auth::signup))),
+                scope("/api").route("/", web::get().to(index1)), // .service(resource("/signup").route(post().to_async(api::auth::signup))),
             )
-            .route("/", web::get().to(index1))
     });
     server = if let Some(l) = listenfd.take_tcp_listener(0).unwrap() {
         server.listen(l).unwrap()
