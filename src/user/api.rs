@@ -9,6 +9,6 @@ pub async fn login(pool: web::Data<DbPool>, login_dto: web::Json<LoginDto>) -> i
     let login_dto = login_dto.into_inner();
     match actions::insert_new_user(login_dto, &conn) {
         Ok(user) => HttpResponse::Ok().body(format!("{:?}", user)),
-        _ => HttpResponse::Ok().body("error")
+        _ => HttpResponse::Ok().body("error"),
     }
 }
